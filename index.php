@@ -33,6 +33,7 @@ class Pdf extends Fpdi\Fpdi
      * Get a new pdf parser instance.
      *
      * @param Fpdi\PdfParser\StreamReader $streamReader
+     *
      * @return Fpdi\PdfParser\PdfParser|setasign\FpdiPdfParser\PdfParser\PdfParser
      */
     protected function getPdfParserInstance(Fpdi\PdfParser\StreamReader $streamReader)
@@ -66,28 +67,41 @@ class Pdf extends Fpdi\Fpdi
 }
 
 
+/**
+ * 像素转化为mm
+ * @param $point
+ *
+ * @return float|int
+ */
+function transformUnit($point)
+{
+    return 25.4 * $point / 96;
+}
 
-function edit_pdf($source, $target) {
+function edit_pdf($source, $target)
+{
     $pdf = new Pdf();
 
-    $pdf->AddPage();
     $pageCount = $pdf->setSourceFile($source);
 
     for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-        if($pageNo!=2) {
+        if ($pageNo == 2) {
+            $imageWidth = 730;
+            $imageHeight = 730;
+            $pdf->AddPage('P', array(transformUnit($imageWidth), transformUnit($imageHeight)));
+            $pdf->Image('data/a.jpg', 0, 0, 0, 0);
+        } else {
+            $pdf->AddPage();
             // import a page
             $templateId = $pdf->importPage($pageNo);
             // use the imported page and adjust the page size
             $pdf->useTemplate($templateId, ['adjustPageSize' => true]);
-
-            $pdf->addPage();
         }
 
     }
 
 
-
-    $pdf->Output('F',$target);
+    $pdf->Output('F', $target);
 }
 
 $source = 'data/source/1529417357501.pdf';
