@@ -90,8 +90,10 @@ function edit_pdf($source, $target) {
     $pdf->Output('F',$target);
 }
 
-$filename = 'data/source/1529417357501.pdf';
+$source = 'data/source/1529417357501.pdf';
 
 $target = 'data/target/1529417357501.pdf';
 
-edit_pdf($filename, $target);
+edit_pdf($source, $target);
+
+echo "修改PDF文件成功! 来源路径:[$source], 目标路径:[$target]";
